@@ -16,29 +16,35 @@ import java.io.IOException;
 public class KinopoiskClient {
     private final String urlSearchByName = "https://api.kinopoisk.dev/v1.4/movie/search?query=";
     private final String urlSearchById = "https://api.kinopoisk.dev/v1.4/movie/";
-    public MovieDTO searchByName(String title, Integer year){
+    public boolean searchByName(MovieDTO movieDTO){
         try {
-            JSONObject movies = getMovieData(urlSearchByName + title);
+            JSONObject movies = getMovieData(urlSearchByName + movieDTO.getMovieTitle());
             JSONArray moviesArray = movies.getJSONArray("docs");
+            if (moviesArray.length()==0){
+                System.out.println("Фильм с таким названием не найден, проверьте правильность написания");
+                return false;
+            }
             for (int i = 0; i < moviesArray.length(); i++) {
                 JSONObject movie = moviesArray.getJSONObject(i);
-                if (movie.optInt("year")==year){
-                    return parserMovie(movie);
+                if (movie.optInt("year")==movieDTO.getYearRelease()){
+                    parserMovie(movie, movieDTO);
+                    return true;
                 }
             }
-            return null;
         }catch (IOException | ParseException e){
             System.out.println(e.getMessage());
-            return null;
         }
+        System.out.println("Фильм с таким годом выпуска не найден, проверьте год выпуска");
+        return false;
     }
-    public MovieDTO searchByID(Integer id){
+    public boolean searchByID(MovieDTO movieDTO){
         try {
-            JSONObject movie = getMovieData(urlSearchById + id.toString());
-            return parserMovie(movie);
+            JSONObject movie = getMovieData(urlSearchById + movieDTO.getIdMovie().toString());
+            parserMovie(movie, movieDTO);
+            return true;
         }catch (IOException | ParseException e){
             System.out.println(e.getMessage());
-            return null;
+            return false;
         }
     }
     private JSONObject getMovieData(String url) throws IOException, ParseException {
@@ -58,19 +64,19 @@ public class KinopoiskClient {
         response.close();
         return jsonResponse;
     }
-    private MovieDTO parserMovie(JSONObject movie){
+    private void parserMovie(JSONObject movie, MovieDTO movieDTO){
         JSONArray countriesArray = movie.getJSONArray("countries");
         String countries = "";
         for (int i = 0; i < countriesArray.length(); i++){
             countries = countries+countriesArray.getJSONObject(i).optString("name")+" ";
         }
-        MovieDTO movieDTO = MovieDTO.builder().idMovie(movie.getLong("id"))
-                .movieTitle(movie.getString("name")).yearRelease(movie.getInt("year"))
-                .descriptionMovie(movie.getString("description")).ageLimit(movie.getString("ageRating")+"+")
-                .movieDuration(movie.getInt("movieLength"))
-                .raitingKP(movie.getJSONObject("rating").getDouble("kp"))
-                .raitingIMDB(movie.getJSONObject("rating").getDouble("imdb"))
-                .countryOrigin(countries).poster(movie.getJSONObject("poster").getString("url")).build();
-        return movieDTO;
+       movieDTO.setIdMovie(movie.getLong("id"));
+       movieDTO.setDescriptionMovie(movie.getString("description"));
+       movieDTO.setAgeLimit(movie.getString("ageRating")+"+");
+       movieDTO.setMovieDuration(movie.getInt("movieLength"));
+       movieDTO.setRaitingKP(movie.getJSONObject("rating").getDouble("kp"));
+       movieDTO.setRaitingIMDB(movie.getJSONObject("rating").getDouble("imdb"));
+       movieDTO.setCountryOrigin(countries);
+       movieDTO.setPoster(movie.getJSONObject("poster").getString("url"));
     }
 }
