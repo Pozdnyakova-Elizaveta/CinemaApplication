@@ -12,13 +12,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 public class KinopoiskClient {
     private final String urlSearchByName = "https://api.kinopoisk.dev/v1.4/movie/search?query=";
     private final String urlSearchById = "https://api.kinopoisk.dev/v1.4/movie/";
+    private final String token = "ZCM0KFY-AAMMDVK-N89HAWN-KCH9ER5";
     public boolean searchByName(MovieDTO movieDTO){
         try {
-            JSONObject movies = getMovieData(urlSearchByName + movieDTO.getMovieTitle());
+            String encodedString = URLEncoder.encode(movieDTO.getMovieTitle().toString(), "UTF-8");
+            JSONObject movies = getMovieData(urlSearchByName+encodedString);
             JSONArray moviesArray = movies.getJSONArray("docs");
             if (moviesArray.length()==0){
                 System.out.println("Фильм с таким названием не найден, проверьте правильность написания");
@@ -53,6 +56,8 @@ public class KinopoiskClient {
                 .setDefaultRequestConfig(requestConfig)
                 .build();
         HttpGet request = new HttpGet(url);
+        request.setHeader("accept", "application/json");
+        request.setHeader("X-API-KEY", token);
         CloseableHttpResponse response = httpClient.execute(request);
         int statusCode = response.getCode();
         if (statusCode != 200) {
@@ -72,7 +77,7 @@ public class KinopoiskClient {
         }
        movieDTO.setIdMovie(movie.getLong("id"));
        movieDTO.setDescriptionMovie(movie.getString("description"));
-       movieDTO.setAgeLimit(movie.getString("ageRating")+"+");
+       movieDTO.setAgeLimit(movie.getInt("ageRating")+"+");
        movieDTO.setMovieDuration(movie.getInt("movieLength"));
        movieDTO.setRaitingKP(movie.getJSONObject("rating").getDouble("kp"));
        movieDTO.setRaitingIMDB(movie.getJSONObject("rating").getDouble("imdb"));

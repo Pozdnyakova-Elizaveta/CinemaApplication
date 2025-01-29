@@ -45,10 +45,8 @@ public class MovieService {
         }
         return null;
     }
-    public void delete(MovieDTO movieDTO){
-        MovieEntity movieEntity = mappingToEntity(movieDTO);
-        movieRepository.delete(movieEntity);
-
+    public void delete(Long id){
+        movieRepository.deleteById(id);
     }
     public List<MovieDTO> findRelevant(){
         List<MovieEntity> movieEntities = movieRepository.findMoviesCurrentlyShowing(LocalDate.now());
@@ -63,7 +61,7 @@ public class MovieService {
                 .movieTitle(movieDTO.getMovieTitle()).yearRelease(movieDTO.getYearRelease())
                 .raitingKP(movieDTO.getRaitingKP()).raitingIMDB(movieDTO.getRaitingIMDB())
                 .descriptionMovie(movieDTO.getDescriptionMovie()).ageLimit(movieDTO.getAgeLimit())
-                .countryOrigin(movieDTO.getCountryOrigin()).poster(movieDTO.getPoster())
+                .countryOrigin(movieDTO.getCountryOrigin()).poster(movieDTO.getPoster()).movieDuration(movieDTO.getMovieDuration())
                 .rentalStartDate(movieDTO.getRentalStartDate()).rentalEndDate(movieDTO.getRentalEndDate()).build();
         return movieEntity;
     }
@@ -72,7 +70,7 @@ public class MovieService {
                 .yearRelease(movieEntity.getYearRelease()).raitingKP(movieEntity.getRaitingKP())
                 .raitingIMDB(movieEntity.getRaitingIMDB()).descriptionMovie(movieEntity.getDescriptionMovie())
                 .ageLimit(movieEntity.getAgeLimit()).countryOrigin(movieEntity.getCountryOrigin())
-                .poster(movieEntity.getPoster())
+                .poster(movieEntity.getPoster()).movieDuration(movieEntity.getMovieDuration())
                 .rentalStartDate(movieEntity.getRentalStartDate()).rentalEndDate(movieEntity.getRentalEndDate())
                 .build();
         return movieDTO;

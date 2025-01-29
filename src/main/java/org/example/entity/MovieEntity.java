@@ -2,9 +2,7 @@ package org.example.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,32 +10,35 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@Table(name = "Movie", schema = "public")
+@Table(name = "\"Movie\"", schema = "public")
+@NoArgsConstructor
+@AllArgsConstructor
 public class MovieEntity {
     @Id
+    @Column(name = "\"ID_Movie\"")
     private Long idMovie;
-    @Column(nullable = false, length = 100)
+    @Column(name = "\"Movie_Title\"", nullable = false, length = 100)
     private String movieTitle;
-    @Column(nullable = false)
+    @Column(name = "\"Year_Release\"", nullable = false)
     private Integer yearRelease;
-    @Column(nullable = false)
+    @Column(name = "\"Raiting_KP\"", nullable = false)
     private Double raitingKP;
-    @Column
+    @Column(name = "\"Raiting_IMDB\"")
     private Double raitingIMDB;
-    @Column(nullable = false)
+    @Column(name = "\"Description_Movie\"", nullable = false)
     private String descriptionMovie;
-    @Column(nullable = false, length = 3)
+    @Column(name = "\"Age_Limit\"", nullable = false, length = 3)
     private String ageLimit;
-    @Column(nullable = false)
+    @Column(name = "\"Country_Origin\"", nullable = false)
     private String countryOrigin;
-    @Column
+    @Column(name = "\"Poster\"")
     private String poster;
-    @Column(nullable = false)
+    @Column(name = "\"Rental_Start_Date\"", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date rentalStartDate;
-    @Column(nullable = false)
+    @Column(name = "\"Rental_End_Date\"", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date rentalEndDate;
-    @Column(nullable = false)
+    @Column(name = "\"Movie_Duration\"", nullable = false)
     private Integer movieDuration;
 }
