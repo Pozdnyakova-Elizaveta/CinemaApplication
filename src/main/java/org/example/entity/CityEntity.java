@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "\"User_Role\"", schema = "public")
+@Table(name = "\"City\"", schema = "public")
 public class CityEntity {
     @Id
     @Column(name = "\"ID_City\"")

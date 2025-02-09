@@ -29,7 +29,7 @@ public class MovieController {
     @GetMapping(path = "/movie/{title}", produces = MediaType.APPLICATION_JSON_VALUE)
     public MovieDTO getMovie(@PathVariable("title") String title) {
         return movieService.find(title);
-    }   //работает, выводит не то
+    }
 
     @PutMapping(path = "/movie/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateMovie(@RequestBody MovieDTO movieDTO) {
@@ -59,7 +59,7 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK).body("Success");
     }
     @DeleteMapping(path = "/movie/delete/{id}")
-    public ResponseEntity<String> deleteMovie(@PathVariable("id") Long id) {    //не работает
+    public ResponseEntity<String> deleteMovie(@PathVariable("id") Long id) {
         try {
             movieService.delete(id);
         } catch (Exception e) {
