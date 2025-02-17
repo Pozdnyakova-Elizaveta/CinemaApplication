@@ -16,10 +16,11 @@ import java.util.Optional;
 @Service
 public class MovieService {
     private final MovieRepository movieRepository;
-    private final KinopoiskClient kpClient = new KinopoiskClient();
+    private final KinopoiskClient kpClient;
     @Autowired
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, KinopoiskClient kpClient) {
         this.movieRepository = movieRepository;
+        this.kpClient = kpClient;
     }
     public void add(MovieDTO movieDTO){
         if (kpClient.searchByName(movieDTO)){

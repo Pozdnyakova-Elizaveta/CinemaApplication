@@ -10,20 +10,27 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.example.dto.MovieDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-
+@Component
 public class KinopoiskClient {
     private final String urlSearchByName = "https://api.kinopoisk.dev/v1.4/movie/search?query=";
     private final String urlSearchById = "https://api.kinopoisk.dev/v1.4/movie/";
-    private final String token = "ZCM0KFY-AAMMDVK-N89HAWN-KCH9ER5";
+    private final String token;
+    @Autowired
+    public KinopoiskClient(KinopoiskProperties kinopoiskProperties) {
+        this.token = kinopoiskProperties.getToken();
+    }
+
     public boolean searchByName(MovieDTO movieDTO){
         try {
             String encodedString = URLEncoder.encode(movieDTO.getMovieTitle().toString(), "UTF-8");
             JSONObject movies = getMovieData(urlSearchByName+encodedString);
             JSONArray moviesArray = movies.getJSONArray("docs");
-            if (moviesArray.length()==0){
+            if (moviesArray.isEmpty()){
                 System.out.println("Фильм с таким названием не найден, проверьте правильность написания");
                 return false;
             }
