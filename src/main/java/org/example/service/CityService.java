@@ -1,5 +1,6 @@
 package org.example.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.dto.CityDTO;
 import org.example.entity.CityEntity;
 import org.example.entity.MovieEntity;
@@ -25,12 +26,8 @@ public class CityService {
         cityRepository.deleteById(id);
     }
     public CityDTO findById(Long id){
-        Optional<CityEntity> optionalCityEntity = cityRepository.findById(id);
-        if (!optionalCityEntity.isEmpty()){
-            CityEntity cityEntity = optionalCityEntity.get();
-            return mappingToDTO(cityEntity);
-        }
-        return null;
+        return mappingToDTO(cityRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException("Entity not found with id: " + id)));
     }
     public List<CityDTO> findAll(){
         List<CityEntity> cityEntities = cityRepository.findAll();

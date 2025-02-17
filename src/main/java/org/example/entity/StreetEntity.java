@@ -18,5 +18,6 @@ public class StreetEntity {
     @Column(name = "\"Street_name\"")
     private String streetName;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "\"ID_City\"")
     private CityEntity cityEntity;
 }

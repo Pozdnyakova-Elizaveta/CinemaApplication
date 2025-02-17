@@ -1,5 +1,6 @@
 package org.example.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.api.KinopoiskClient;
 import org.example.dto.MovieDTO;
 import org.example.entity.MovieEntity;
@@ -37,13 +38,8 @@ public class MovieService {
         movieRepository.save(movieEntity);
     }
     public MovieDTO find(String title){
-        Optional<MovieEntity> movieEntityOptional = movieRepository.findByMovieTitle(title);
-        if (!movieEntityOptional.isEmpty()) {
-            MovieEntity movieEntity = movieEntityOptional.get();
-            MovieDTO movieDTO = mappingToDTO(movieEntity);
-            return movieDTO;
-        }
-        return null;
+        return mappingToDTO(movieRepository.findByMovieTitle(title)
+                .orElseThrow(() -> new EntityNotFoundException("Entity not found with title: " + title)));
     }
     public void delete(Long id){
         movieRepository.deleteById(id);
